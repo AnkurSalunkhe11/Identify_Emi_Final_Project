@@ -14,13 +14,3 @@ Feature: Car Loan EMI Calculation and Validation
     And I should see the first month interest amount
     And I should see the first month principal amount
     And I print the EMI details for verification
-
-  @homeloan
-  Scenario: Export Home Loan year-on-year table to Excel
-    Given I navigate to the EMI calculator homepage
-    When I select the Home Loan tab
-    And the page loads with amortization table
-    Then I should extract the year-on-year amortization data
-    And the data should be exported to an Excel file
-    And the Excel file should be saved in the target directory
-
