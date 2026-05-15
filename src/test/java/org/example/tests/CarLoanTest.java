@@ -3,6 +3,7 @@ package org.example.tests;
 import pageObjects.CarLoanPage;
 import pageObjects.HomeLoanPage;
 import utilities.ExcelUtil;
+import utilities.ConfigReader;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -12,7 +13,7 @@ public class CarLoanTest extends BaseTest {
 
     @Test
     public void carLoanFlowAndExportHomeLoanTable() throws Exception {
-        driver.get("https://emicalculator.net/");
+        driver.get(ConfigReader.getAppURL());
 
         CarLoanPage car = new CarLoanPage(driver);
         car.open();

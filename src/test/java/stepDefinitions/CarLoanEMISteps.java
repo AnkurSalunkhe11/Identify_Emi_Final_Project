@@ -4,6 +4,7 @@ import factory.DriverFactory;
 import pageObjects.CarLoanPage;
 import pageObjects.HomeLoanPage;
 import utilities.ExcelUtil;
+import utilities.ConfigReader;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -23,8 +24,9 @@ public class CarLoanEMISteps {
         try {
             driver = DriverFactory.getDriver();
             System.out.println("Navigating to EMI calculator...");
-            driver.get("https://emicalculator.net/");
-            System.out.println("Successfully navigated to EMI Calculator homepage");
+            String appUrl = ConfigReader.getAppURL();
+            driver.get(appUrl);
+            System.out.println("Successfully navigated to EMI Calculator homepage: " + appUrl);
         } catch (Exception e) {
             System.err.println("Failed to navigate: " + e.getMessage());
             throw new RuntimeException("Navigation failed: " + e.getMessage(), e);
