@@ -42,6 +42,18 @@ public class HomeLoanEMISteps {
         }
     }
 
+    @When("I scroll down to the amortization table")
+    public void scrollToTable() {
+        try {
+            System.out.println("Scrolling down to the amortization table...");
+            homeLoanPage.scrollToTable();
+            System.out.println("Successfully scrolled to the table");
+        } catch (Exception e) {
+            System.err.println("Failed to scroll to table: " + e.getMessage());
+            throw new RuntimeException("Scroll to table failed: " + e.getMessage(), e);
+        }
+    }
+
     @When("I enter home loan amount as {string}")
     public void enterHomeLoanAmount(String amount) {
         try {

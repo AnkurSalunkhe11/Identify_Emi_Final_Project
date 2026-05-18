@@ -1,3 +1,6 @@
+logs
+src/main/java/org/example
+logs/automation.log
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -13,7 +16,6 @@ target/
 *.iml
 *.ipr
 .idea/vcs.xml
-logs/automation.log
 .idea
 
 ### Eclipse ###
