@@ -13,6 +13,8 @@ target/
 *.iml
 *.ipr
 .idea/vcs.xml
+logs/automation.log
+.idea
 
 ### Eclipse ###
 .apt_generated
