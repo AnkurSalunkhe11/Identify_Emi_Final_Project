@@ -115,6 +115,35 @@ public class HomeLoanPage {
         }
     }
 
+    public void scrollToTable() {
+        try {
+            // Wait for table to be present first
+            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("table")));
+
+            // Find the first meaningful table
+            List<WebElement> tables = driver.findElements(By.tagName("table"));
+            WebElement targetTable = null;
+            for (WebElement table : tables) {
+                if (table.findElements(By.tagName("tr")).size() > 1) {
+                    targetTable = table;
+                    break;
+                }
+            }
+
+            if (targetTable != null) {
+                // Scroll to the table element
+                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", targetTable);
+                // Wait a moment for scroll animation to complete
+                Thread.sleep(500);
+                System.out.println("Scrolled down to the amortization table");
+            } else {
+                throw new RuntimeException("No suitable table found to scroll to");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to scroll to table: " + e.getMessage(), e);
+        }
+    }
+
     /**
      * Extract all year-on-year amortization data including monthly breakdowns.
      * This method uses JavaScript to show monthly data and extracts everything.
