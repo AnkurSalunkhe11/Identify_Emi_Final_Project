@@ -3,7 +3,8 @@ package stepDefinitions;
 import factory.DriverFactory;
 import pageObjects.HomeLoanPage;
 import utilities.ExcelUtil;
-import io.cucumber.java.en.Given;
+import utilities.ScreenshotUtil;
+import utilities.ScenarioContext;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +16,12 @@ public class HomeLoanEMISteps {
 
     private WebDriver driver;
     private HomeLoanPage homeLoanPage;
+    private final ScenarioContext scenarioContext;
+
+    // PicoContainer will inject ScenarioContext automatically
+    public HomeLoanEMISteps(ScenarioContext scenarioContext) {
+        this.scenarioContext = scenarioContext;
+    }
 
     @When("I select the Home Loan tab")
     public void selectHomeLoanTab() {
@@ -24,6 +31,7 @@ public class HomeLoanEMISteps {
             homeLoanPage = new HomeLoanPage(driver);
             homeLoanPage.open();
             System.out.println("Home Loan tab selected");
+            ScreenshotUtil.attachScreenshot(scenarioContext.getScenario(), "homeLoan_page_loaded");
         } catch (Exception e) {
             System.err.println("Failed to select Home Loan tab: " + e.getMessage());
             throw new RuntimeException("Home Loan tab selection failed: " + e.getMessage(), e);
@@ -36,6 +44,7 @@ public class HomeLoanEMISteps {
             System.out.println("Waiting for amortization table to load...");
             homeLoanPage.waitForTableReady();
             System.out.println("Page loaded, ready for table data extraction");
+            // table is loaded (this step occurs after values are entered in the feature)
         } catch (Exception e) {
             System.err.println("Failed while waiting for table: " + e.getMessage());
             throw new RuntimeException("Table load wait failed: " + e.getMessage(), e);
@@ -48,6 +57,7 @@ public class HomeLoanEMISteps {
             System.out.println("Scrolling down to the amortization table...");
             homeLoanPage.scrollToTable();
             System.out.println("Successfully scrolled to the table");
+
         } catch (Exception e) {
             System.err.println("Failed to scroll to table: " + e.getMessage());
             throw new RuntimeException("Scroll to table failed: " + e.getMessage(), e);
@@ -59,6 +69,7 @@ public class HomeLoanEMISteps {
         try {
             System.out.println("Entering home loan amount: " + amount);
             homeLoanPage.setLoanAmount(amount);
+
         } catch (Exception e) {
             System.err.println("Failed to enter home loan amount: " + e.getMessage());
             throw new RuntimeException("Home loan amount entry failed: " + e.getMessage(), e);
@@ -70,6 +81,7 @@ public class HomeLoanEMISteps {
         try {
             System.out.println("Entering home loan interest rate: " + interest);
             homeLoanPage.setInterest(interest);
+
         } catch (Exception e) {
             System.err.println("Failed to enter home loan interest rate: " + e.getMessage());
             throw new RuntimeException("Home loan interest rate entry failed: " + e.getMessage(), e);
@@ -81,6 +93,8 @@ public class HomeLoanEMISteps {
         try {
             System.out.println("Entering home loan tenure: " + years);
             homeLoanPage.setTenure(years);
+
+            ScreenshotUtil.attachScreenshot(scenarioContext.getScenario(), "homeLoan_values_entered");
         } catch (Exception e) {
             System.err.println("Failed to enter home loan tenure: " + e.getMessage());
             throw new RuntimeException("Home loan tenure entry failed: " + e.getMessage(), e);
@@ -94,6 +108,8 @@ public class HomeLoanEMISteps {
             List<List<String>> tableData = homeLoanPage.extractAllAmortizationData();
             if (!tableData.isEmpty()) {
                 System.out.println("Successfully extracted all amortization data with " + tableData.size() + " rows");
+
+                ScreenshotUtil.attachScreenshot(scenarioContext.getScenario(), "homeLoan_table_extracted");
             } else {
                 throw new AssertionError("No amortization table data found");
             }
@@ -117,6 +133,7 @@ public class HomeLoanEMISteps {
                 Path outputPath = Path.of("target", fileName);
                 ExcelUtil.writeTableToExcel(tableData, outputPath);
                 System.out.println("Data exported to Excel file: " + outputPath.getFileName());
+
             } else {
                 throw new AssertionError("No data to export");
             }
@@ -133,9 +150,16 @@ public class HomeLoanEMISteps {
             // Since file name is dynamic, we can check if any recent Excel file exists in target
             // For simplicity, assume the export method handles the path correctly
             System.out.println("Excel file export verification completed");
+
         } catch (Exception e) {
             System.err.println("Excel file verification failed: " + e.getMessage());
             throw new RuntimeException("File save verification failed: " + e.getMessage(), e);
         }
+    }
+
+    // Helper to make screenshot names file-system and log friendly
+    private String sanitizeForName(String input) {
+        if (input == null) return "null";
+        return input.replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 }
