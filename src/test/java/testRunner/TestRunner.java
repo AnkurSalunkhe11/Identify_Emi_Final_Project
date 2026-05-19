@@ -6,7 +6,10 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = {"Features/CarLoanEMIValidation.feature", "Features/HomeLoanEMIValidation.feature"},
+        features = {
+            "Features/CarLoanEMIValidation.feature",
+            "Features/HomeLoanEMIValidation.feature"
+        },
         glue = {"stepDefinitions", "hooks"},
         plugin = {"pretty", "html:target/cucumber-report.html"},
         monochrome = true
